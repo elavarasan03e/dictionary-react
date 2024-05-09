@@ -1,40 +1,36 @@
 import './App.css';
-import { useState } from 'react';
+import { useState,useEffect} from 'react';
 
 function App() {
-  const [inputText, setInputText] = useState('');
-  const [definitionMessage, setDefinitionMessage] = useState('');
+  const [inputText,setInputText]=useState('');
+  const [definitionMessage,setDefinitionMessage]=useState('');
+  const [dictionary,setDictionary]=useState([]);
 
-  const dictionary = [
-    { word: "React", meaning: "A JavaScript library for building user interfaces." },
-    { word: "Component", meaning: "A reusable building block in React." },
-    { word: "State", meaning: "An object that stores data for a component." }
-  ];
+  useEffect(()=>{
+      setDictionary([
+      { word: "React", meaning: "A JavaScript library for building user interfaces." },
+      { word: "Component", meaning: "A reusable building block in React." },
+      { word: "State", meaning: "An object that stores data for a component." }]);
+    },[]);
+  
 
-  const handleChange = (e) => {
-    setInputText(e.target.value);
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!inputText.trim()) {
-      setDefinitionMessage('Please enter a word to search.');
-      return;
+    const handleChange=(e)=>{
+      setInputText(e.target.value);
     }
-    const foundWords = dictionary.filter(dict => inputText.toLowerCase() === dict.word.toLowerCase());
-    if (foundWords.length > 0) {
-      const definitions = foundWords.map(word => word.meaning).join('\n');
-      setDefinitionMessage(definitions);
-    } else {
-      setDefinitionMessage('Word not found in the dictionary.');
-    }
-    setInputText('');
-  }
+    const submitted=(e)=>{
+      e.preventDefault();
+      const foundWord=dictionary.find(dict=> inputText.toLowerCase()===dict.word.toLowerCase());
+      if(foundWord){
+        setDefinitionMessage(foundWord.meaning);
+      }else{
+        setDefinitionMessage('Word not found in the dictionary.')
+      }
 
+    }
   return (
     <div className="App">
       <h1>Dictionary App</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={submitted}>
         <input type='text' placeholder='Search for a word...' value={inputText} onChange={handleChange} />
         <button type='submit'>Search</button>
       </form>
