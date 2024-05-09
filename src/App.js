@@ -1,49 +1,51 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 function App() {
-  const [inputText, setInputText] = useState('');
-  const [definitionMessage, setDefinitionMessage] = useState('');
-  const [dictionary, setDictionary] = useState([]);
-
-  useEffect(() => {
-    setDictionary([
-      { word: "React", meaning: "A JavaScript library for building user interfaces." },
-      { word: "Component", meaning: "A reusable building block in React." },
-      { word: "State", meaning: "An object that stores data for a component." }
-    ]);
-  }, []);
-
+  const handleDictionary = () => {
+    let found = false;
+    dictionary.forEach((item) => {
+      if (item.word.toLowerCase() === curValue.toLowerCase()) {
+        setResult(item.meaning);
+        found = true;
+      }
+      if (!found) {
+        setResult("Word not found in the dictionary.");
+      }
+    });
+  };
+const dictionary = [
+    {
+      word: "React",
+      meaning: "A JavaScript library for building user interfaces.",
+    },
+    { word: "Component", meaning: "A reusable building block in React." },
+    { word: "State", meaning: "An object that stores data for a component." },
+  ];
+  const [curValue, setCurValue] = useState("");
+  const [result, setResult] = useState("");
   const handleChange = (e) => {
-    setInputText(e.target.value);
-  }
-
-  const submitted = (e) => {
-    e.preventDefault();
-    if (!inputText.trim()) {
-      setDefinitionMessage('');
-      return;
-    }
-    const foundWord = dictionary.find(dict => inputText.toLowerCase() === dict.word.toLowerCase());
-    if (foundWord) {
-      setDefinitionMessage(foundWord.meaning);
-    } else {
-      setDefinitionMessage('Word not found in the dictionary.');
-    }
-  }
+    setCurValue(e.target.value);
+  };
 
   return (
     <div className="App">
-      <h1>Dictionary App</h1>
-      <form onSubmit={submitted}>
-        <input type='text' placeholder='Search for a word...' value={inputText} onChange={handleChange} />
-        <button type='submit'>Search</button>
-      </form>
-      <p><b>Definition:</b></p>
-      <p>{definitionMessage}</p>
+    <h1>Dictionary App</h1>
+    <input
+      type="text"
+      placeholder="Search for a word..."
+      value={curValue}
+      onChange={(e) => handleChange(e)}
+    />
+    <button onClick={() => handleDictionary()}>Search</button>
+    <div className="result">
+      <h3>Definition:</h3>
+      <p>{result}</p>
     </div>
+  </div>
   );
 }
 
 export default App;
+
 
